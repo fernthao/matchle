@@ -55,7 +55,7 @@ public final class Corpus implements Iterable<NGram> {
         return corpus.stream().filter(ngram -> filter.test(ngram)).count();
     }
 
-    // Assignment 4
+    // Homework 4
     // Method to calculate corpus score
     public long score(NGram key, NGram guess) {
         if (corpus.isEmpty()) {
@@ -66,24 +66,28 @@ public final class Corpus implements Iterable<NGram> {
         return size(NGramMatcher.of(key, guess).match());
     }
 
-    public long scoreWithoutKey(NGram guess, Function<LongStream, Long> aggregator) {
-        if (corpus.isEmpty()) {
-            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
-        }
-        Objects.requireNonNull(guess);
-        Objects.requireNonNull(aggregator);
+    private long score(NGram guess, Function<LongStream, Long> aggregator) {
+        assert guess != null;
+        assert aggregator != null;
+
         return aggregator.apply(corpus.stream()
-        .mapToLong(key -> score(key, guess)));
+                         .mapToLong(key -> score(key, guess)));
     }
 
     // Maximum score of guess among all corpus’ n-grams
     public long scoreWorstCase(NGram guess) {
-        return scoreWithoutKey(guess, stream -> stream.max().orElseThrow(() -> new IllegalStateException("No maximum value found")));
+        if (corpus.isEmpty()) {
+            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
+        }
+        return score(guess, stream -> stream.max().orElseThrow(() -> new IllegalStateException("No maximum value found")));
     }
 
     // Sum of scores of guess among all corpus’ n-grams.
     public long scoreAverageCase(NGram guess) {
-        return scoreWithoutKey(guess, LongStream::sum);
+        if (corpus.isEmpty()) {
+            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
+        }
+        return score(guess, LongStream::sum);
     }
 
     public NGram bestGuess(ToLongFunction<NGram> criterion) {
