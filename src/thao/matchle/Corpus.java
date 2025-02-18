@@ -91,6 +91,7 @@ public final class Corpus implements Iterable<NGram> {
     }
 
     public NGram bestGuess(ToLongFunction<NGram> criterion) {
+        Objects.requireNonNull(criterion);
         long minScore = corpus.stream()
                               .mapToLong(key -> criterion.applyAsLong(key))
                               .min().getAsLong();
