@@ -32,7 +32,8 @@ class NGramMatcher {
         return Filter.from(matchPredicate);    
     }
 
-    private Predicate<NGram> matchCase(Predicate<? super IndexedCharacter> matchType, BiFunction<NGram, IndexedCharacter, Boolean> matchTest, String message) {
+    // Template matching algorithm for all three match cases
+    private Predicate<NGram> match(Predicate<? super IndexedCharacter> matchType, BiFunction<NGram, IndexedCharacter, Boolean> matchTest, String message) {
         Objects.requireNonNull(matchType);
         Objects.requireNonNull(matchTest);
         Objects.requireNonNull(message);
@@ -58,14 +59,14 @@ class NGramMatcher {
     }
 
     private Predicate<NGram> matchIdentical() {
-        return matchCase(key::matches, (ngram, indexChar) -> ngram.matches(indexChar), " is in the word and in the correct spot.");
+        return match(key::matches, (ngram, indexChar) -> ngram.matches(indexChar), " is in the word and in the correct spot.");
     }
 
     private Predicate<NGram> matchDifferent() {
-        return matchCase(key::containsElseWhere, (ngram, indexChar) -> ngram.containsElseWhere(indexChar), " is in the word but in the wrong spot.");
+        return match(key::containsElseWhere, (ngram, indexChar) -> ngram.containsElseWhere(indexChar), " is in the word but in the wrong spot.");
     }
 
     private Predicate<NGram> matchAbsent() {
-        return matchCase(Predicate.not(key::contains), (ngram, indexChar) -> !ngram.contains(indexChar), " is not in the word in any spot.");
+        return match(Predicate.not(key::contains), (ngram, indexChar) -> !ngram.contains(indexChar), " is not in the word in any spot.");
     }
 }

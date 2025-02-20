@@ -22,6 +22,7 @@ public final class Filter {
 
     // Methods
     public boolean test(NGram n) {
+        Objects.requireNonNull(n);
         return predicate.test(n);
     }
 

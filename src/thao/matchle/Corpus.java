@@ -55,7 +55,6 @@ public final class Corpus implements Iterable<NGram> {
         return corpus.stream().filter(ngram -> filter.test(ngram)).count();
     }
 
-    // Homework 4
     // Method to calculate corpus score
     public long score(NGram key, NGram guess) {
         if (corpus.isEmpty()) {
@@ -76,6 +75,7 @@ public final class Corpus implements Iterable<NGram> {
 
     // Maximum score of guess among all corpus’ n-grams
     public long scoreWorstCase(NGram guess) {
+        Objects.requireNonNull(guess);
         if (corpus.isEmpty()) {
             throw new IllegalStateException("Can not calculate the score of an empty corpus.");
         }
@@ -84,6 +84,7 @@ public final class Corpus implements Iterable<NGram> {
 
     // Sum of scores of guess among all corpus’ n-grams.
     public long scoreAverageCase(NGram guess) {
+        Objects.requireNonNull(guess);
         if (corpus.isEmpty()) {
             throw new IllegalStateException("Can not calculate the score of an empty corpus.");
         }
@@ -148,19 +149,23 @@ public final class Corpus implements Iterable<NGram> {
         }
 
         public boolean isConsistent(Integer wordSize) {
+            Objects.requireNonNull(wordSize);
             for (NGram n : ngrams) {
-                if (n.size() != wordSize) return false;
-            }
-            return true;
+                    if (n.size() != wordSize) return false;
+                }
+                return true;
         }
 
         public Corpus build() {
             Corpus result = null;
+
             assert ngrams.iterator().hasNext(); 
             int wordSize = ngrams.iterator().next().size();
+
             if (this.isConsistent(wordSize)) {
                 result = new Corpus(ngrams);
             }
+            
             return result;
         }   
 

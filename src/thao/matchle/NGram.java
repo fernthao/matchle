@@ -45,6 +45,15 @@ public class NGram implements Iterable<IndexedCharacter>{
     }
 
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (char c : ngram) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o.getClass() == NGram.class) {
             NGram n = NGram.class.cast(o);
@@ -70,6 +79,12 @@ public class NGram implements Iterable<IndexedCharacter>{
         return ngram.contains(c.character());
     }
 
+     // returns whether c appears anywhere in the n-gram
+     public boolean contains(Character c) {
+        Objects.requireNonNull(c);
+        return ngram.contains(c);
+    }
+
     // returns whether c’s character appears in the n-gram at an index different than c’s
     public boolean containsElseWhere(IndexedCharacter c) {
         Objects.requireNonNull(c);
@@ -91,6 +106,7 @@ public class NGram implements Iterable<IndexedCharacter>{
         private int index;
 
         public Iterator (NGram ngramObj) {
+            Objects.requireNonNull(ngramObj);
             index = 0;
         }
 
@@ -110,7 +126,6 @@ public class NGram implements Iterable<IndexedCharacter>{
         // Location of problematic character
         private final int index;
 
-        // TOASK: Why Serialization?
         public static final long serialVersionUID = 42L;
 
         public int getIndex() {
