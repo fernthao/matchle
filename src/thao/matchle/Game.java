@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import thao.matchle.GuessResult.MatchType;
 
@@ -67,12 +66,11 @@ public class Game {
             System.out.print("Enter your guess: ");
             String guessInput = scanner.nextLine().trim();
 
-            if (!isValidGuess(guessInput)) {
-                System.out.println("Invalid guess length.");
+            boolean successs = Barricade.makeValidGuess(history, key, guessInput, corpus, corpus.wordSize());
+
+            if (!successs) {
                 continue;
             }
-
-            makeGuess(guessInput);
 
             if (isWin()) {
                 System.out.println("Congratulations! You found the key: " + key);
@@ -82,28 +80,18 @@ public class Game {
                 System.out.println("Incorrect guess. Match result:");
                 getFeedback();
             }
+            // System.out.println("Best worst case guess based on history: " + Barricade.bestWorstCaseGuess(history).toString());
+            // System.out.println("Best average case guess based on history: " + Barricade.bestAverageCaseGuess(history).toString());
         }
         scanner.close();
         System.out.println("Key: " + key.toString());
     }
-    private void makeGuess(String guess) {
+    private void makeGuess(NGram guess) {
         assert guess != null;
         assert key != null;
 
-        NGram guessNGram = NGram.from(guess);
-        Map<IndexedCharacter, MatchType> resultMap = new HashMap<>();
-
-        for (IndexedCharacter c : guessNGram) {
-            if (key.matches(c)) {
-                resultMap.put(c, MatchType.EXACT);
-            } else if (key.contains(c)) {
-                resultMap.put(c, MatchType.PARTIAL);
-            } else {
-                resultMap.put(c, MatchType.NONE);
-            }
-        }
-
-        GuessResult result = new GuessResult(guessNGram, resultMap);
+        NGramMatcher matcher = NGramMatcher.of(key, guess);
+        GuessResult result = matcher.match();
         history.add(result);
     }
 
@@ -115,16 +103,14 @@ public class Game {
         return history.get(history.size() - 1).isMatch();
     }
 
-    private boolean isValidGuess(String guess) {
-        assert guess != null;
-        return guess.length() == key.size() && corpus.contains(NGram.from(guess));
-    }
-
     public List<GuessResult> getHistory() {
         return history;
     }
 
     public void getFeedback() {
+        assert history != null;
+        assert !history.isEmpty();
+        // Display the last guess result
         GuessResult lastGuess = history.get(history.size() - 1);
         for (Map.Entry<IndexedCharacter, MatchType> entry : lastGuess.getResultMap().entrySet()) {
             Character character = entry.getKey().character();

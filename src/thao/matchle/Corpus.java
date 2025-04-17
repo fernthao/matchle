@@ -49,69 +49,8 @@ public final class Corpus implements Iterable<NGram> {
         return wordSize;
     }
 
-    // Returns the number of n-grams consistent with the filter. 
-    public long size(Filter filter) {
-        Objects.requireNonNull(filter);
-        return corpus.stream().filter(ngram -> filter.test(ngram)).count();
-    }
-
-    // Method to calculate corpus score
-    public long score(NGram key, NGram guess) {
-        if (corpus.isEmpty()) {
-            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
-        }
-        Objects.requireNonNull(key);
-        Objects.requireNonNull(guess);
-        return size(NGramMatcher.of(key, guess).match());
-    }
-
-    private long score(NGram guess, Function<LongStream, Long> aggregator) {
-        assert guess != null;
-        assert aggregator != null;
-
-        return aggregator.apply(corpus.stream()
-                         .mapToLong(key -> score(key, guess)));
-    }
-
-    // Maximum score of guess among all corpus’ n-grams
-    public long scoreWorstCase(NGram guess) {
-        Objects.requireNonNull(guess);
-        if (corpus.isEmpty()) {
-            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
-        }
-        return score(guess, stream -> stream.max().orElseThrow(() -> new IllegalStateException("No maximum value found")));
-    }
-
-    // Sum of scores of guess among all corpus’ n-grams.
-    public long scoreAverageCase(NGram guess) {
-        Objects.requireNonNull(guess);
-        if (corpus.isEmpty()) {
-            throw new IllegalStateException("Can not calculate the score of an empty corpus.");
-        }
-        return score(guess, LongStream::sum);
-    }
-
-    public NGram bestGuess(ToLongFunction<NGram> criterion) {
-        Objects.requireNonNull(criterion);
-        long minScore = corpus.stream()
-                              .mapToLong(key -> criterion.applyAsLong(key))
-                              .min().getAsLong();
-        
-        // return an ngram with minScore                      
-        return corpus.stream()
-                     .filter(key -> criterion.applyAsLong(key) == minScore)
-                     .collect(Collectors.toList())
-                     .get(0);
-    }
-
-    public NGram bestWorstCaseGuess(NGram guess) {
-        Objects.requireNonNull(guess);
-        return bestGuess(ngram -> scoreWorstCase(ngram));
-    }
-
-    public NGram bestAverageCaseGuess(NGram guess) {
-        Objects.requireNonNull(guess);
-        return bestGuess(ngram -> scoreAverageCase(ngram));
+    public boolean isEmpty() {
+        return corpus.isEmpty();
     }
 
     // Builder class
@@ -167,13 +106,6 @@ public final class Corpus implements Iterable<NGram> {
             }
             
             return result;
-        }   
-
-        // returns a builder with the n-grams that are consistent with the filter
-        public Builder filter(Filter filter) {
-            Objects.requireNonNull(filter);
-            ngrams = ngrams.stream().filter(ngram -> filter.test(ngram)).collect(Collectors.toSet());
-            return this;
-        }
+        } 
     }
 }
