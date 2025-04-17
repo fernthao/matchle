@@ -21,15 +21,15 @@ class NGramMatcher {
         return new NGramMatcher(key, guess);
     }
     
-    public Filter match () {
+    public Predicate<NGram> match () {
         // Return false if key and guess have different lengths
         if (key.size() != guess.size()) {
-            return  Filter.FALSE;
+            return ngram -> false;
         }
         // Create a predicate that checks if the guess matches the key
         Predicate<NGram> matchPredicate = matchIdentical().and(matchDifferent().and(matchAbsent()));
 
-        return Filter.from(matchPredicate);    
+        return matchPredicate;    
     }
 
     // Template matching algorithm for all three match cases

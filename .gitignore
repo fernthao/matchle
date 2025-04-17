@@ -1,0 +1,24 @@
+# Note on notation: "#" is comments, "*" means blank
+# file ignores all things listed. 
+# So listing *.class ignores all things ____.class
+
+# Ignore generated files
+*.class
+*.jar
+*.html
+*.txt
+
+# Ignore testing and coverage reports
+target/
+surefire-reports/
+*.iml
+*.iws
+*.ipr
+
+# Ignore hamcrest & junit
+src/lib/*
+
+#Ignore testing and coverage report
+report/*
+doc/*
+build/*
