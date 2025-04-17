@@ -6,13 +6,11 @@ import java.util.stream.*;
 // NGram
 public class NGram implements Iterable<IndexedCharacter>{
     private final List<Character> ngram;
-    private final Set<Character> charset;
 
     // Constructors
     private NGram(ArrayList<Character> ngram, HashSet<Character> charset) {
         assert ngram != null;
         this.ngram = ngram;
-        this.charset = charset;
     }
 
     // returns a new NGram from a copy of the argument

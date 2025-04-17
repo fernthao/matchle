@@ -2,10 +2,6 @@ package thao.matchle;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 public class WorstCaseStrategy implements MatchingStrategy {
     private final Corpus corpus;
