@@ -1,11 +1,8 @@
 package thao.matchle;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
-import thao.matchle.GuessResult.MatchType;
 
 final class Barricade  {
     static Optional<NGram> validatedGuess(String guess, Corpus corpus, int expectedLength) {

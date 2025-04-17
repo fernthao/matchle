@@ -1,10 +1,7 @@
 package thao.matchle;
 
 import java.util.*;
-import java.util.function.ToLongFunction;
 import java.util.stream.*;
-import java.lang.IllegalStateException;
-import java.util.function.Function;
 
 // Corpus class
 public final class Corpus implements Iterable<NGram> {

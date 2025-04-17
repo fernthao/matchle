@@ -12,7 +12,6 @@ public class Game {
     private NGram key;
     private int maxAttempts;
     private List<GuessResult> history;
-    private boolean isOver;
     public static void main(String[] args) {
         Game game = new Game("wordlist.txt", 5, 6);
         game.play();
@@ -27,7 +26,6 @@ public class Game {
         keyGen();
         this.maxAttempts = maxAttempts;
         this.history = new ArrayList<GuessResult>();
-        this.isOver = false;
     }
 
     private void loadCorpus(String corpusFilePath, int wordSize) {
@@ -80,23 +78,15 @@ public class Game {
                 System.out.println("Incorrect guess. Match result:");
                 getFeedback();
             }
-            // System.out.println("Best worst case guess based on history: " + Barricade.bestWorstCaseGuess(history).toString());
-            // System.out.println("Best average case guess based on history: " + Barricade.bestAverageCaseGuess(history).toString());
+            System.out.println("Best worst case guess based on history: " + Barricade.validBestWorstCaseGuess(history, corpus).toString());
+            System.out.println("Best average case guess based on history: " + Barricade.validBestAverageCaseGuess(history, corpus).toString());
         }
         scanner.close();
         System.out.println("Key: " + key.toString());
     }
-    private void makeGuess(NGram guess) {
-        assert guess != null;
-        assert key != null;
-
-        NGramMatcher matcher = NGramMatcher.of(key, guess);
-        GuessResult result = matcher.match();
-        history.add(result);
-    }
 
     private boolean isOver() {
-        return history.size() >= maxAttempts;
+        return history.size() >= maxAttempts || isWin();
     }
 
     private boolean isWin() {
