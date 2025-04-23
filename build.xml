@@ -12,6 +12,13 @@ Generated directories
     jacoco/index.html: JaCoCo report
   doc/ : JavaDoc
 
+$ANT_HOME/lib must contain (see Ant-JUnit and JaCoCo installation guides):
+  ant-junit4.jar
+  ant-junit.jar
+  hamcrest-2.2.jar
+  junit-4.13.jar
+  jacocoant.jar
+
 -->
 
 <project name="matchle" xmlns:jacoco="antlib:org.jacoco.ant">
@@ -32,7 +39,7 @@ Generated directories
 
   <!--   Class containing the main method: define ONLY IF your project has a main -->
   <!-- TODO: if this project specifies a main class, replace "HelloWorld" with that main class (otherwise, you can ignore this) -->
-  <property name="main-class" value="Game"/>
+  <property name="main-class" value="${ant.project.name}.Game"/>
 
   <!--   Additional jar that may be needed for properly runnign junit -->
   <path id="hamcrest.classpath">
@@ -45,9 +52,6 @@ Generated directories
     <delete dir="${report.dir}"/>
     <delete dir="${doc.dir}"/>
     <delete dir="${output.dir}"/>
-    <delete>
-        <fileset dir="." includes="*.txt"/>
-    </delete>
   </target>
 
   <!--   ant build : compile the src  -->
@@ -57,14 +61,15 @@ Generated directories
   </target>
 
   <!--   ant run : define run target ONLY IF your project has a main -->
-
-<target name="run" depends="build">
-    <java classname="${main-class}" classpath="${build.dir}" fork="true" inputstring="">
-        <sysproperty key="java.awt.headless" value="true"/>
-        <arg line=""/>
+  
+  <target name="run" depends="build">
+    <mkdir dir="${output.dir}"/>
+    <java fork="true" classname="${main-class}" classpath="${build.dir}" output="${output.file}" error="${error.file}">
+      <assertions><enable/></assertions>
+      <arg line="${args}"/>
     </java>
-</target>
-
+  </target>
+ 
 
   <!--   ant test : run unit tests -->
   <target name="test" depends="build">
@@ -76,7 +81,7 @@ Generated directories
         <assertions><enable/></assertions>
         <formatter type="xml"/>
         <batchtest fork="yes" filtertrace="off" todir="${junit.dir}">
-	  <fileset dir="${build.dir}" includes="**/*Test.class"/>
+	  <fileset dir="${build.dir}" includes="**/*Test.class" excludes="Scheduler$Test.class"/>
         </batchtest>
         <classpath refid="hamcrest.classpath"/>
 	<classpath path="${build.dir}"/>

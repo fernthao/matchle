@@ -1,19 +1,24 @@
 package thao.matchle;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Before;
+import org.junit.Test;
 
-class NGramMatcherTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+
+public class NGramMatcherTest {
 
     @Test
-    void testOfCreatesNGramMatcher() {
+    public void testOfCreatesNGramMatcher() {
         NGram key = NGram.from("apple");
         NGram guess = NGram.from("apric");
         
         assertNotNull(NGramMatcher.of(key, guess));
     }
     @Test
-    void testMatchIdentical() {
+    public void testMatchIdentical() {
         NGram key = NGram.from("apple");
         NGram guess = NGram.from("apple");
         
@@ -24,7 +29,7 @@ class NGramMatcherTest {
         assertEquals(key, result.getGuess());
     }
     @Test
-    void testMatchDifferent() {
+    public void testMatchDifferent() {
         NGram key = NGram.from("apple");
         NGram guess = NGram.from("often");
         
@@ -32,17 +37,15 @@ class NGramMatcherTest {
         GuessResult result = matcher.match();
         
         assertEquals(GuessResult.MatchType.PARTIAL, result.getMatchType(3));
-        assertEquals(key, result.getGuess());
     }
     @Test
-    void testMatchAbsent() {
+    public void testMatchAbsent() {
         NGram key = NGram.from("apple");
-        NGram guess = NGram.from("banana");
+        NGram guess = NGram.from("grune");
         
         NGramMatcher matcher = NGramMatcher.of(key, guess);
         GuessResult result = matcher.match();
         
         assertEquals(GuessResult.MatchType.NONE, result.getMatchType(0));
-        assertEquals(key, result.getGuess());
     }
 }

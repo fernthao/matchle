@@ -1,15 +1,15 @@
 package thao.matchle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
 
-class IndexedCharacterTest {
+public class IndexedCharacterTest {
     @Test
-    void testIndexedCharacter() {
+    public void testIndexedCharacter() {
         IndexedCharacter ic = new IndexedCharacter(1, 'a');
         assertEquals(1, ic.index());
-        assertEquals('a', ic.character());
+        assertEquals((Character) 'a', ic.character());
     }
 }
 

@@ -6,7 +6,6 @@
 *.class
 *.jar
 *.html
-*.txt
 
 # Ignore testing and coverage reports
 target/
