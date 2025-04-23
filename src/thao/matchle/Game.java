@@ -87,7 +87,7 @@ public class Game {
                                       .filter(word -> word.length() == wordSize)
                                       .collect(Collectors.toList());
 
-            Corpus.Builder builder = Corpus.Builder.EMPTY;
+            Corpus.Builder builder = Corpus.Builder.empty(wordSize);
             words.forEach(word -> builder.add(NGram.from(word)));
 
             return builder.build();
@@ -144,9 +144,6 @@ public class Game {
             else {
                 System.out.println("Incorrect guess. Match result:");
                 getFeedback();
-                // TODO uncomment this when the strategy is implemented
-                //System.out.println("Best worst case guess based on history: " + bestWorstCaseGuess().toString());
-                //System.out.println("Best average case guess based on history: " + bestAverageCaseGuess().toString());
             }
         }
         scanner.close();
@@ -203,21 +200,45 @@ public class Game {
     }
 
     /**
-     * Get the best guess according to the Worst Case Strategy.
-     * @return the NGram representing the guess
+     * Get the corpus.
+     * @return the Corpus object
      */
-    private NGram bestWorstCaseGuess() {
-        assert history != null;
-        WorstCaseStrategy worstCaseStrategy = WorstCaseStrategy.from(corpus);
-        return worstCaseStrategy.guess();
+    public Corpus getCorpus() {
+        return corpus;
     }
 
     /**
-     * Get the best guess according to the Average Case Strategy.
-     * @return the NGram representing the guess
+     * Get the maximum attempts allowed
+     * @return the maximum attempts
      */
-    private NGram bestAverageCaseGuess() {
-        assert history != null;
-        AverageCaseStrategy averageCaseStrategy = AverageCaseStrategy.from(corpus);
-        return averageCaseStrategy.guess();}
+    public int getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    /**
+     * Get the key.
+     * @return the NGram representing the key
+     */
+    public NGram getKey() {
+        return key;
+    }
+
+    // /**
+    //  * Get the best guess according to the Worst Case Strategy.
+    //  * @return the NGram representing the guess
+    //  */
+    // NGram bestWorstCaseGuess() {
+    //     assert history != null;
+    //     WorstCaseStrategy worstCaseStrategy = WorstCaseStrategy.from(corpus);
+    //     return worstCaseStrategy.guess();
+    // }
+
+    // /**
+    //  * Get the best guess according to the Average Case Strategy.
+    //  * @return the NGram representing the guess
+    //  */
+    // NGram bestAverageCaseGuess() {
+    //     assert history != null;
+    //     AverageCaseStrategy averageCaseStrategy = AverageCaseStrategy.from(corpus);
+    //     return averageCaseStrategy.guess();}
 }

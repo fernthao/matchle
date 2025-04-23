@@ -21,11 +21,12 @@ public class BarricadeTest {
         NGram n1 = NGram.from("apple");
         NGram n2 = NGram.from("guava");
         NGram n3 = NGram.from("mango");
-        testCorpus = Corpus.Builder.EMPTY.add(n1).add(n2).add(n3).build();
+        testCorpus = Corpus.Builder.empty(5).add(n1).add(n2).add(n3).build();
         testKey = NGram.from("apple");
         history = new ArrayList<>();
     }
 
+    // TODO figure out why this fails
     @Test
     public void testValidatedGuessWithValidInput() {
         Optional<NGram> result = Barricade.validatedGuess("apple", testCorpus, 5);
@@ -57,8 +58,8 @@ public class BarricadeTest {
 
     @Test
     public void testValidatedGuessWithNonExistentWord() {
-        Optional<NGram> result = Barricade.validatedGuess("grape", testCorpus, 5);
-        assertTrue("Validated guess should be empty for non-existent word", result.isEmpty());
+            Optional<NGram> result = Barricade.validatedGuess("grape", testCorpus, 5);
+            assertTrue("Validated guess should be empty for non-existent word", result.isEmpty());
     }
 
     @Test

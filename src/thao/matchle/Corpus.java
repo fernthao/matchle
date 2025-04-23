@@ -1,6 +1,8 @@
 package thao.matchle;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.*;
 
 /**
@@ -8,15 +10,26 @@ import java.util.stream.*;
  * It implements Iterable interface on type NGram to allow iteration over the NGrams in the corpus.
  */
 public final class Corpus implements Iterable<NGram> {
+    /**
+     * Logger object to log messages.
+     */
+    private static final Logger logger = Logger.getLogger(Corpus.class.getName());
+    /**
+     * Set of NGrams in the corpus.
+     */
     private final Set<NGram> corpus;
+    /**
+     * The size of the words in the corpus.
+     */
     private int wordSize;
 
     // Constructor
     private Corpus(Set<NGram> corpus) {
         assert corpus != null;
         this.corpus = Set.copyOf(corpus);
-        assert corpus.iterator().hasNext(); 
-        this.wordSize = corpus.iterator().next().size();
+        Iterator<NGram> it = corpus.iterator();
+        assert it.hasNext(); 
+        this.wordSize = it.next().size();; 
     }
     
     /**
@@ -34,6 +47,19 @@ public final class Corpus implements Iterable<NGram> {
      */
     public boolean contains(NGram n) {
         return corpus.contains(n);
+    }
+
+    /**
+     * Return a string representation of the corpus
+     * @return a string representation of the corpus
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (NGram n : corpus) {
+            sb.append(n.toString()).append(", ");
+        }
+        return sb.toString();
     }
 
     /**
@@ -85,16 +111,29 @@ public final class Corpus implements Iterable<NGram> {
          * Set of NGrams in the builder.
          */
         private Set<NGram> ngrams;
+        /**
+         * The size of the words in the corpus.
+         */
+        private int wordSize;
 
         /**
          * Empty builder object.
+         * @param wordSize the size of the words in the corpus
+         * @return a new empty Builder object with the set wordSize
+         * @throws IllegalArgumentException if wordSize is negative
          */
-        public static final Builder EMPTY = new Builder(new HashSet<NGram>());
+        public static final Builder empty(int wordSize) {
+            if (wordSize < 0) {
+                throw new IllegalArgumentException("Word size must be non-negative");
+            }
+            return new Builder(new HashSet<NGram>(), wordSize);
+        }
 
         // Constructor
-        private Builder(Set<NGram> ngrams) {
+        private Builder(Set<NGram> ngrams, int wordSize) {
             assert ngrams != null;
             this.ngrams = ngrams;
+            this.wordSize = wordSize;
         }
 
         /**
@@ -104,7 +143,7 @@ public final class Corpus implements Iterable<NGram> {
          */
         public static final Builder of(Corpus corpus) {
             Objects.requireNonNull(corpus);
-            return new Builder(corpus.corpus());
+            return new Builder(corpus.corpus(), corpus.wordSize());
         }
 
         /**
@@ -112,10 +151,14 @@ public final class Corpus implements Iterable<NGram> {
          * @param n the NGram to add
          * @return the Builder object
          * @throws NullPointerException if n is null
+         * @throws IllegalStateException if n is not consistent with the word size
          */
         public Builder add(NGram n) {
-            Objects.requireNonNull(n);
-            ngrams.add(n);
+            if (isValid(n)) {
+                ngrams.add(n);
+            } else {
+                // empty since logging is done in isValid
+            }
             return this;
         }
         
@@ -128,43 +171,54 @@ public final class Corpus implements Iterable<NGram> {
         public Builder addAll(Collection<NGram> nCollection) {
             Objects.requireNonNull(nCollection);
             for (NGram n : nCollection) {
-                if (n != null) ngrams.add(n);
-                else 
-                // null NGram are not added to ngrams
-                ;
+                if (!isValid(n)) {
+                    // Log a warning if an invalid NGram is found and continue
+                    // Favor logging over throwing an exception (robustness over correctness)
+                    continue;
+                }
+                ngrams.add(n);
             }
             return this;
         }
 
         /**
-         * Check if the NGrams in the builder are consistent with a given word size.
-         * @param wordSize the word size to check against
-         * @return true if all NGrams in the builder are consistent with the given word size, false otherwise
-         * @throws NullPointerException if wordSize is null
+         * Get the word size for the builder.
+         * @return the word size
          */
-        public boolean isConsistent(Integer wordSize) {
-            Objects.requireNonNull(wordSize);
-            for (NGram n : ngrams) {
-                    if (n.size() != wordSize) return false;
-                }
-                return true;
+        public int wordSize() {
+            return wordSize;
+        }
+
+        /**
+         * Check if the NGram is valid and ready to be added to the list of ngrams.
+         * @param n the NGram to check
+         * @return true if the NGram is valid, false otherwise
+         */
+        public boolean isValid(NGram n) {
+            // Log a warning if an invalid NGram is found
+            // Favor logging over throwing an exception (robustness over correctness)
+            if (n == null) {
+                logger.log(Level.WARNING, "Null NGram found in collection");
+                return false;
+            }
+            if (n.size() != wordSize) {
+                logger.log(Level.WARNING, "NGram size is not consistent with the word size");
+                return false;
+            }
+            return true;
         }
 
         /**
          * Build a new Corpus object from the NGrams in the builder.
          * @return a new Corpus object
-         * @throws IllegalStateException if the NGrams in the builder are not consistent with the given word size
+         * @throws IllegalStateException if the builder is empty
         */
         public Corpus build() {
-            Corpus result = null;
-
-            assert ngrams.iterator().hasNext(); 
-            int wordSize = ngrams.iterator().next().size();
-
-            if (this.isConsistent(wordSize)) {
-                result = new Corpus(ngrams);
+            Objects.requireNonNull(ngrams);
+            if (ngrams.isEmpty()) {
+                throw new IllegalStateException("Cannot build an empty corpus");
             }
-            return result;
+            return new Corpus(ngrams);
         } 
     }
 }

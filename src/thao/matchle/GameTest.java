@@ -69,11 +69,11 @@ public class GameTest {
         }
     }
 
-    // @Test
-    // public void testKeyGeneration() {
-    //     Game game = Game.from("wordlist.txt", 5, 6);
-    //     assertNotNull(game.key); // Ensure key is generated
-    // }
+    @Test
+    public void testKeyGeneration() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        assertNotNull(game.getKey()); // Ensure key is generated
+    }
 
     @Test
     public void testHistoryUpdatesAfterGuess() {
@@ -84,34 +84,37 @@ public class GameTest {
         assertEquals(1, game.getHistory().size());
     }
 
-    // @Test
-    // public void testPlayMethod() {
-    //     // This test is limited since play() involves user input.
-    //     // Ensure no exceptions are thrown during execution.
-    //     Game game = Game.from("wordlist.txt", 5, 6);
-    //     try {
-    //         game.play();
-    //     } catch (Exception e) {
-    //         fail("play() method threw an exception: " + e.getMessage());
-    //     }
-    // }
+    @Test
+    public void testCorpusLoadedCorrectly() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        assertNotNull(game.getCorpus());
+        assertFalse(game.getCorpus().isEmpty());
+    }
 
-    // @Test
-    // public void testCorpusLoadedCorrectly() {
-    //     Game game = Game.from("wordlist.txt", 5, 6);
-    //     assertNotNull(game.corpus);
-    //     assertFalse(game.corpus.getCorpus().isEmpty());
-    // }
+    @Test
+    public void testMaxAttemptsSetCorrectly() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        assertEquals(6, game.getMaxAttempts());
+    }
 
-    // @Test
-    // public void testMaxAttemptsSetCorrectly() {
-    //     Game game = Game.from("wordlist.txt", 5, 6);
-    //     assertEquals(6, game.maxAttempts);
-    // }
+    @Test
+    public void testKeyIsFromCorpus() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        assertTrue(game.getCorpus().contains(game.getKey()));
+    }
 
-    // @Test
-    // public void testKeyIsFromCorpus() {
-    //     Game game = Game.from("wordlist.txt", 5, 6);
-    //     assertTrue(game.corpus.getCorpus().contains(game.key));
-    // }
+    @Test
+    public void testBestWorstCaseGuess() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        NGram bestGuess = game.bestWorstCaseGuess();
+        assertNotNull(bestGuess);
+        assertTrue(game.getCorpus().contains(bestGuess));
+    }
+    @Test
+    public void testBestAverageCaseGuess() {
+        Game game = Game.from("wordlist.txt", 5, 6);
+        NGram bestGuess = game.bestAverageCaseGuess();
+        assertNotNull(bestGuess);
+        assertTrue(game.getCorpus().contains(bestGuess));
+    }
 }
