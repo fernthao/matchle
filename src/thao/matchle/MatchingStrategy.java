@@ -26,6 +26,8 @@ public interface MatchingStrategy {
      * @return The number of NGrams in the corpus that match the feedback result.
      */
     default long size(GuessResult result, Corpus corpus) {
+        Objects.requireNonNull(result);
+        Objects.requireNonNull(corpus);
         List<NGram> matchResult = corpus.stream()
                                 .filter(ngram -> {
                                     NGramMatcher matcher = NGramMatcher.of(ngram, result.getGuess());

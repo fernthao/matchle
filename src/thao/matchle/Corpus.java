@@ -46,6 +46,7 @@ public final class Corpus implements Iterable<NGram> {
      * @return true if the corpus contains the NGram, false otherwise
      */
     public boolean contains(NGram n) {
+        Objects.requireNonNull(n);
         return corpus.contains(n);
     }
 

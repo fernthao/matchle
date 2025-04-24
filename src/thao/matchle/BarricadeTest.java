@@ -89,5 +89,23 @@ public class BarricadeTest {
         assertTrue("Make valid guess should return false for incorrect length", !result);
         assertEquals("History should remain empty for incorrect length", 0, history.size());
     }
+    @Test(expected = NullPointerException.class)
+    public void testMakeValidGuessWithNullKey() {
+        Barricade.makeValidGuess(history, null, "apple", testCorpus, 5);
+    }
     
+    @Test(expected = NullPointerException.class)
+    public void testMakeValidGuessWithNullGuessInputString() {
+        Barricade.makeValidGuess(history, testKey, null, testCorpus, 5);
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void testMakeValidGuessWithNullCorpus() {
+        Barricade.makeValidGuess(history, testKey, "apple", null, 5);
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void testValidatedGuessWithNullCorpus() {
+        Barricade.validatedGuess("apple", null, 5);
+    }
 }

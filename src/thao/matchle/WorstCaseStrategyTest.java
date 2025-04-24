@@ -30,4 +30,24 @@ public class WorstCaseStrategyTest {
         System.out.println("Testing guess " + TEST_STRATEGY.guess().toString());
         assertNotNull(TEST_STRATEGY.guess().toString());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testSizeWithNullResult() {
+        TEST_STRATEGY.size(null, TEST_CORPUS); // Should throw NullPointerException
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void testSizeWithNullCorpus() {
+        NGramMatcher matcher = NGramMatcher.of(NGram.from(TEST_WORD),  NGram.from("apple"));
+        GuessResult result = matcher.match();
+        TEST_STRATEGY.size(result, null); // Should throw NullPointerException
+    }
+    
+    @Test
+    public void testSizeWithValidInputs() {
+        NGramMatcher matcher = NGramMatcher.of(NGram.from(TEST_WORD),  NGram.from("apple"));
+        GuessResult result = matcher.match();
+        long size = TEST_STRATEGY.size(result, TEST_CORPUS);
+        assertTrue("Size should be non-negative", size >= 0);
+    }
 }

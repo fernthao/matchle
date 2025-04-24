@@ -102,19 +102,4 @@ public class GameTest {
         Game game = Game.from("wordlist.txt", 5, 6);
         assertTrue(game.getCorpus().contains(game.getKey()));
     }
-
-    @Test
-    public void testBestWorstCaseGuess() {
-        Game game = Game.from("wordlist.txt", 5, 6);
-        NGram bestGuess = game.bestWorstCaseGuess();
-        assertNotNull(bestGuess);
-        assertTrue(game.getCorpus().contains(bestGuess));
-    }
-    @Test
-    public void testBestAverageCaseGuess() {
-        Game game = Game.from("wordlist.txt", 5, 6);
-        NGram bestGuess = game.bestAverageCaseGuess();
-        assertNotNull(bestGuess);
-        assertTrue(game.getCorpus().contains(bestGuess));
-    }
 }

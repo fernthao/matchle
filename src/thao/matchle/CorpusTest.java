@@ -138,4 +138,12 @@ public class CorpusTest {
         assertNotNull(newBuilder);
         assertEquals(4, newBuilder.wordSize());
     }
+    @Test(expected = NullPointerException.class)
+        public void testContainsWithNullNGram() {
+        Corpus.Builder builder = Corpus.Builder.empty(4);
+        NGram ngram = NGram.from("test");
+        builder.add(ngram);
+        Corpus corpus = builder.build();
+        corpus.contains(null); // Should throw NullPointerException
+    }
 }

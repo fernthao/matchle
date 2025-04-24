@@ -46,6 +46,11 @@ final class Barricade  {
      * @return true if the guess is valid and processed, false otherwise
      */
     static boolean makeValidGuess(List<GuessResult> history, NGram key, String guessInpuString, Corpus corpus, int expectedLength) {
+        Objects.requireNonNull(history, "History cannot be null");
+        Objects.requireNonNull(key, "Key cannot be null");
+        Objects.requireNonNull(guessInpuString, "Guess input string cannot be null");
+        Objects.requireNonNull(corpus, "Corpus cannot be null");
+        
         Optional<NGram> validatedGuessOpt = Barricade.validatedGuess(guessInpuString, corpus, expectedLength);
         if (validatedGuessOpt.isEmpty()) {
             return false; // Return false if the guess is invalid
