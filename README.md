@@ -1,18 +1,8 @@
-## Getting Started
+## CLI wordle-like game in Java
+Project submitted under homework 12 in CSDS 293 - Software Craftmanship class
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### Features
+- Game logic that mimics wordle: prompting the user to guess a word of a certain length, giving feedback on the accuracy of each letter. Three types of matches: perfect match (right letter at right place), partial match (right letter, wrong place), non-match (wrong letter)
+- Test cases that cover the full codebase
+- Ant build file to specify build and test targets
+- Comments and Barricade architecture, adhering to best software craftmanship practices.
