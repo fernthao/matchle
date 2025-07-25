@@ -131,9 +131,9 @@ public class Game {
             System.out.print("Enter your guess: ");
             String guessInput = scanner.nextLine().trim();
 
-            boolean successs = makeGuess(guessInput);
+            boolean success = makeGuess(guessInput);
 
-            if (!successs) {
+            if (!success) {
                 continue;
             }
 
