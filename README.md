@@ -7,6 +7,9 @@ Project submitted under homework 12 in CSDS 293 - Software Craftmanship class
 - Ant build file to specify build and test targets
 - Comments and Barricade architecture, adhering to best software craftmanship practices.
 
+### Demo
+![Matchle Game Demo](matchle-demo.gif)
+
 ### Instructions
 1. Clone this repo to your computer
 2. Install dependencies
