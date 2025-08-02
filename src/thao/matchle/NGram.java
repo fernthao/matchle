@@ -83,11 +83,17 @@ public class NGram implements Iterable<IndexedCharacter>{
      */
     @Override
     public boolean equals(Object o) {
-        if (o.getClass() == NGram.class) {
-            NGram n = NGram.class.cast(o);
-            return (this.ngram.equals(n.ngram));
-        }
-        else return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NGram n = (NGram) o;
+        return this.ngram.equals(n.ngram);
+    }
+    
+    // The hashSet uses the hashCode method to determine if two objects are the same.
+    // If two objects are the same, they must have the same hashCode.
+    @Override
+    public int hashCode() {
+        return Objects.hash(ngram);
     }
     
     /**
